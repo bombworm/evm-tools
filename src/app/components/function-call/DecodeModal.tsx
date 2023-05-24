@@ -22,13 +22,8 @@ const ParamItem = styled.code`
   display: block;
 `;
 
-interface DecodeDetailProps {
-  children?: React.ReactNode;
-  decoded: any;
-}
-
 function DecodeDetail({decoded}) {
-  return decoded.params?.length > 0 && (
+  return decoded?.params?.length > 0 && (
     <>
         <b>Name: </b><span>{decoded["name"]}</span>
         {decoded.params.map((p, i) => {
@@ -53,11 +48,16 @@ const DecodeModal = ({ closeModal, contract }) => {
     try{
       abiDecoder.addABI(contract.abi);
       const decoded = abiDecoder.decodeMethod(encoded);
-      setDecoded(decoded)
+      if (decoded) {
+        setDecoded(decoded)
+      } else {
+        setHasError(true);
+        setDecoded({message:'method not found'});
+      }
     } catch(error) {
       console.error(error);
-      setDecoded({message:error.message});
       setHasError(true);
+      setDecoded({message:error.message});
     }
   }
 

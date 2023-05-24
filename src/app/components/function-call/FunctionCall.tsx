@@ -85,7 +85,6 @@ const FunctionForm = ({ fn, contract }) => {
   };
 
   return (
-    // <Container label="Call function">
     <FormControl
       component="fieldset" 
       variant="filled"
@@ -98,7 +97,6 @@ const FunctionForm = ({ fn, contract }) => {
     >
       <FormLabel 
         component="legend" 
-        // htmlFor="residence-type-radio"
       >
         Call function
       </FormLabel>
