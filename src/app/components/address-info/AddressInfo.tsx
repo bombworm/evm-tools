@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 
 import Network from "../../containers/Network";
 import ContractAddress from "../../containers/ContractAddress";
-import { FormControl, FormLabel, Box, Input, Divider } from "@mui/material";
-
-const containerWidth = 475;
+import Connection from "../../containers/Connection";
+import OutputLog from "../../containers/OutputLog";
+import { FormControl, FormLabel, Box, Input, Divider, Button } from "@mui/material";
+import { ethers } from "ethers";
 
 const AddressInfo = () => {
   const [inputText, setInputText] = useState("");
@@ -15,6 +15,24 @@ const AddressInfo = () => {
     setCustomAddress,
     address,
   } = ContractAddress.useContainer();
+  const { provider } = Connection.useContainer();
+  const { addLogItem } = OutputLog.useContainer();
+
+  const getProxyImpl = async () => {
+    try {
+      if (!address) {
+        return;
+      }
+      const implementation = await provider?.getStorageAt(address, "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc");
+      const impl = ethers.utils.hexStripZeros(implementation as string);
+      if (impl != "0x") {
+        addLogItem(`implementation: ${impl}`);
+      }
+    } catch (error) {
+      console.error(error);
+      addLogItem(`Error: ${error.message}`);
+    }
+  };
   return (
     <FormControl
       component="fieldset"
@@ -38,17 +56,6 @@ const AddressInfo = () => {
 
       <div>
         <div style={{ marginTop: `1rem` }}>
-          From artifact @ network {network?.name}{" "}
-          {network && `(${network?.chainId})`}:
-        </div>
-        <Box component="div" sx={{
-          textOverflow: 'ellipsis',
-          bgcolor: 'action.disabledBackground',
-        }}>
-          {addressFromArtifact || "No address found in artifact"}
-        </Box>
-        <Divider style={{ marginTop: `1rem` }} />
-        <div style={{ marginTop: `1rem` }}>
           <strong>Selected contract address:</strong>
         </div>
         <Box component="div" sx={{
@@ -57,6 +64,9 @@ const AddressInfo = () => {
         }}>
           {address || "No valid address, function call will fail"}
         </Box>
+        <Button onClick={getProxyImpl} variant="contained" color="secondary">
+          ERC1967 impl
+        </Button>
       </div>
     </FormControl>
   );
