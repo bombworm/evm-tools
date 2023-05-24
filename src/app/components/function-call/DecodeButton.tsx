@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogTitle, Button } from "@mui/material";
 
-import EncodeModal from "./EncodeModal";
+import DecodeModal from "./DecodeModal";
 
 const customStyles = {
   overlay: {
@@ -26,32 +26,34 @@ const customStyles = {
   },
 };
 
-const EncodeButton = ({ args, types, inputs, opts }) => {
+const DecodeButton = ({ contract }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
     <>
-      <Button onClick={openModal} variant="outlined">Encode</Button>
+      <Button onClick={openModal} variant="outlined" color="secondary">Decode</Button>
 
       <Dialog
         open={isModalOpen}
         onClose={closeModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        PaperProps={{
+          sx:{
+            width: "50vw"
+          }
+        }}
       >
-        <DialogTitle>Arguments encode</DialogTitle>
-        <EncodeModal
+        <DialogTitle>Arguments decode</DialogTitle>
+        <DecodeModal
           closeModal={closeModal}
-          args={args}
-          types={types}
-          inputs={inputs}
-          opts={opts}
+          contract={contract}
         />
       </Dialog>
     </>
   );
 };
 
-export default EncodeButton;
+export default DecodeButton;

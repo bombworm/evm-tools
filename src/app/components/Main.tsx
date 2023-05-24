@@ -99,7 +99,7 @@ const Main = () => {
                 flexGrow: "1"
               }}
             >
-              <FunctionCall fn={selectedFn} />
+              <FunctionCall fn={selectedFn} contract={contract} />
             </ColumnContainer>
           </TopContainer>
           <OutputLog />

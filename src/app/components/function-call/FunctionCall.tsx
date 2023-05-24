@@ -5,6 +5,7 @@ import { FormControl, FormLabel, Button, Checkbox, Input, FormControlLabel } fro
 
 import OutputLog from "../../containers/OutputLog";
 import EncodeButton from "./EncodeButton";
+import DecodeButton from "./DecodeButton";
 import useFormData from "./useFormData";
 import useCallFunction from "./useCallFunction";
 
@@ -19,7 +20,7 @@ const Content = styled.div`
   text-align: left;
 `;
 
-const FunctionForm = ({ fn }) => {
+const FunctionForm = ({ fn, contract }) => {
   const { addLogItem } = OutputLog.useContainer();
   const [formState, setFormState] = useState({});
   const [ethToSend, setEthToSend] = useState("");
@@ -111,6 +112,7 @@ const FunctionForm = ({ fn }) => {
               value={formState[idx] || ""}
               onChange={(e) => handleInputChange(idx, e.target.value)}
               className="function-form-item"
+              fullWidth
             />
           </div>
         ))}
@@ -127,7 +129,7 @@ const FunctionForm = ({ fn }) => {
           </>
         )}
 
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", columnGap: 10 }}>
           <Button onClick={handleSubmit} className="function-submit-btn" variant="contained">
             Submit
           </Button>
@@ -136,6 +138,9 @@ const FunctionForm = ({ fn }) => {
             types={types}
             inputs={fn.inputs}
             opts={opts}
+          />
+          <DecodeButton
+            contract={contract}
           />
         </div>
         <div style={{ display: "flex" }}>
