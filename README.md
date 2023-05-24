@@ -1,6 +1,8 @@
-##New features
-- 🕵enable call view function with blockTag for validating history data
-- 🦉enable force static call for write functions to fetch data
+## New features
+- 🕵 enable call view function with blockTag for validating history data
+- 🦉 enable force static call for write functions to fetch data
+- 🩺 get TransparentUpgradeableProxy implementation address
+- 🛠 decode function input data 
 
 
 ## Features by eth95
