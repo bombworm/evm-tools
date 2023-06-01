@@ -23,10 +23,14 @@ const EncodeModal = ({ closeModal, args, types, inputs, opts }) => {
       try {
         const processedArgs = args.map((arg, idx) => {
           const type = types[idx];
-          return type.slice(-2) === "[]" ? JSON.parse(arg) : arg;
+          if (type.substring(0, 4) === "uint") return ethers.BigNumber.from(arg);
+          if (type.slice(-2) === "[]") return JSON.parse(arg);
+          if (type === "bool") return JSON.parse(arg);
+          if (type === "tuple") return JSON.parse(arg);
+          return arg;
         });
         const callData = ethers.utils.defaultAbiCoder.encode(
-          types,
+          inputs,
           processedArgs,
         );
         setEncoded(callData);
