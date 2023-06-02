@@ -13,13 +13,13 @@ const DataPanel = styled(Box)`
   overflow-y: auto;
 `;
 
-const EncodeModal = ({ closeModal, args, types, inputs, opts }) => {
+const EncodeModal = ({ closeModal, args, types, fn, opts }) => {
   const [encoded, setEncoded] = useState("");
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     setHasError(false);
-    if (inputs.length > 0) {
+    if (fn.inputs.length > 0) {
       try {
         const processedArgs = args.map((arg, idx) => {
           const type = types[idx];
@@ -29,10 +29,8 @@ const EncodeModal = ({ closeModal, args, types, inputs, opts }) => {
           if (type === "tuple") return JSON.parse(arg);
           return arg;
         });
-        const callData = ethers.utils.defaultAbiCoder.encode(
-          inputs,
-          processedArgs,
-        );
+        let iface = new ethers.utils.Interface([fn])
+        const callData = iface.encodeFunctionData(fn.name, processedArgs);
         setEncoded(callData);
       } catch (error) {
         console.error(error);
@@ -42,7 +40,7 @@ const EncodeModal = ({ closeModal, args, types, inputs, opts }) => {
     } else {
       setEncoded("No inputs");
     }
-  }, [args, types, inputs]);
+  }, [args, types, fn]);
 
   return (
     <DialogContent>
@@ -50,7 +48,7 @@ const EncodeModal = ({ closeModal, args, types, inputs, opts }) => {
         <DataPanel sx={{bgcolor: 'action.disabledBackground'}}>
           {types.map((type, idx) => {
             const arg = args[idx];
-            const label = inputs[idx].name;
+            const label = fn.inputs[idx].name;
             return (
               <div key={label}>
                 <div>

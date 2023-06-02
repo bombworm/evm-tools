@@ -31,7 +31,7 @@ function DecodeDetail({decoded}) {
                 <ParamItem
                   key={p.name}
                 >
-                  [{i}]<i>{p.name}:</i> {p.value}
+                  [{i}]<i>{p.name}({p.type}):</i> {JSON.stringify(p.value)}
                 </ParamItem>
             );
         })}

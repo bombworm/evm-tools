@@ -134,7 +134,7 @@ const FunctionForm = ({ fn, contract }) => {
           <EncodeButton
             args={args}
             types={types}
-            inputs={fn.inputs}
+            fn={fn}
             opts={opts}
           />
           <DecodeButton
