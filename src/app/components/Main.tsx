@@ -11,6 +11,7 @@ import FunctionList from "./function-info/FunctionList";
 import FunctionDetails from "./function-info/FunctionDetails";
 import FunctionCall from "./function-call/FunctionCall";
 // import useQueryStringContract from "./useQueryStringContract";
+import { ethers } from "ethers";
 
 const Container = styled.div`
   flex-grow: 1;
@@ -62,6 +63,15 @@ const Main = () => {
       .filter((x) => x.type === "function")
       .sort((a, b) => a.name.localeCompare(b.name));
     selectedFn = fns[selectedIdx];
+    const iface = new ethers.utils.Interface(contract.abi)
+    let functionCollections = Object.keys(iface.functions);
+    let selectors: {[sig:string]: string} = {}
+    for(let declaration of functionCollections) {
+      let selector = iface.getSighash(declaration);
+      // console.log(`%c ${declaration}, %c ${selector}`, 'color:blue', 'color:green');
+      selectors[selector] = declaration;
+    }
+    console.log(selectors)
   } else {
     fns = [];
     selectedFn = null;

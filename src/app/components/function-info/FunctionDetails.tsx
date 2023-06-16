@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import {FormControl, FormLabel, List, ListItemButton, ListItemText } from '@mui/material';
+import { ethers } from 'ethers';
 
 const Content = styled.div`
   position: absolute;
@@ -39,6 +40,12 @@ const Name = styled.span`
 `;
 
 const FunctionInfo = ({ fn }) => {
+  const getSignatureHash = () => {
+    const signature = `${fn.name}(${fn.inputs.map((input: any) => input.type).join(',')})`;
+    const sigHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(signature)).substr(0, 10);
+    return sigHash;
+  };
+
   if (!fn) {
     return (
       <FormControl
@@ -89,6 +96,13 @@ const FunctionInfo = ({ fn }) => {
           <b>State Mutability:</b>{" "}
           <FloatRight className="function-details-state-mutability">
             {fn?.stateMutability?.toString()}
+          </FloatRight>
+        </DataItem>
+
+        <DataItem>
+          <b>Signature Hash:</b>{" "}
+          <FloatRight className="function-details-signature-hash">
+            {getSignatureHash()}
           </FloatRight>
         </DataItem>
 

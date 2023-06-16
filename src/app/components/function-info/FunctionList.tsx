@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 // import { Cutout } from "react95";
 import {FormControl, FormLabel, List, ListItemButton, ListItemText } from '@mui/material';
+import { ethers } from 'ethers';
 
 const FunctionList = ({ fns, selectedIdx, setSelectedIdx }) => {
   return (
@@ -23,7 +24,10 @@ const FunctionList = ({ fns, selectedIdx, setSelectedIdx }) => {
         Functions (arity):
       </FormLabel>
       <List aria-label="contract list">
-        {fns.map((fn, i) => (
+        {fns.map((fn, i) => {
+          const signature = `${fn.name}(${fn.inputs.map((input: any) => input.type).join(',')})`;
+          const sigHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(signature)).substr(0, 10);
+          return (
             <ListItemButton
               key={i + fn.name}
               selected={selectedIdx === i}
@@ -34,9 +38,10 @@ const FunctionList = ({ fns, selectedIdx, setSelectedIdx }) => {
                 }
               }}
             >
-              <ListItemText primary={i + ". " + fn.name} />
+              <ListItemText primary={i + ". " + fn.name} secondary={sigHash} />
             </ListItemButton>
-          ))}
+          )
+          })}
       </List>
     </FormControl>
   );
